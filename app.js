@@ -31,9 +31,212 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
 
-var UserList = AV.Object.extend('UserList');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// //新建一张表
+// var TodoFolder = AV.Object.extend('TodoFolder');
+// // 新建对象
+//   var todoFolder = new TodoFolder();
+// // 设置键值
+//   todoFolder.set('name','工作');
+// // 生成一张表
+// todoFolder.save().then(function (todo) {
+// //返回id
+// console.log('objectId is ' + todo.id);
+// }, function (error) {
+// //返回错误
+// console.error(error);
+// });
+
+
+
+
+/*openidhe用户绑定*/
+
+//查询用户
+app.get('/getList/:openid', function (req, res, next) {
+    var UserName = AV.Object.extend('UserName');
+    var query = new AV.Query(UserName);
+        query.contains('name',req.params.openid);
+        query.find().then(function (results) {
+        res.json({
+            title:results
+        })
+        }, function (err) {
+            if (err.code === 101) {
+                // 该错误的信息为：{ code: 101, message: 'Class or object doesn\'t exists.' }，说明 Todo 数据表还未创建，所以返回空的 Todo 列表。
+                // 具体的错误代码详见：https://leancloud.cn/docs/error_code.html
+                res.json({
+                    title: 'Login 列表',
+                    dataforlean: ['错误']
+                });
+            } else {
+                next(err);
+            }
+        }).catch(next);
+})
+//创建账单
+app.get('/newList/:openid/:name', function (req, res, next) {
+
+    var newList = "M" + Math.random().toString(36).substr(2);
+
+    var UserName = AV.Object.extend('UserName');
+    var userName = new UserName();
+    userName.set('name', req.params.openid);
+    userName.set('cheaes', req.params.name);
+    userName.set('List',newList);
+    userName.save().then(function (UserList) {
+        // 成功保存之后，执行其他逻辑.
+        res.json({title:"ok"})
+    },  function (err) {
+        if (err.code === 101) {
+            // 该错误的信息为：{ code: 101, message: 'Class or object doesn\'t exists.' }，说明 Todo 数据表还未创建，所以返回空的 Todo 列表。
+            // 具体的错误代码详见：https://leancloud.cn/docs/error_code.html
+            res.json({
+                title: 'Login 列表',
+                dataforlean: ['错误']
+            });
+        } else {
+            next(err);
+        }
+    }).catch(next);
+
+
+//新建一张表
+var TodoFolder = AV.Object.extend(newList);
+// 新建对象
+  var todoFolder = new TodoFolder();
+// 设置键值
+    todoFolder.set('state',"0");
+    todoFolder.set('name', "收入");
+    todoFolder.set('beizhu', "收入");
+    todoFolder.set('value',"0");
+    todoFolder.set('nameID',"3");
+// 生成一张表
+    todoFolder.save().then(function (todo) {
+    //返回id 
+    console.log('objectId is ' + todo.id);
+    }, function (error) {
+    //返回错误  
+    console.error(error);
+    });
+})
+
+//绑定账单;
+app.get('/bindList/:openid/:name', function (req, res, next) {
+
+console.log(req.params.openid,req.params.name)
+var UserName = AV.Object.extend('UserName');
+    //查询表
+    var query = new AV.Query('UserName');
+    query.contains('List', req.params.name);
+    query.find().then(function (results) {
+        if (results.length==0) {
+            res.json({
+                title: '无法添加',
+            });
+        }else{
+            console.log(results.length)
+            //增加
+            if(results.length>1){
+                for (var i = 0; i < results.length; i++) {
+                    console.log(i)
+                    if(results[i]._serverData.name == req.params.openid){
+                        res.json({title:"重复添加了!"})
+                    }else if(i == results.length-1){
+                        var userName = new UserName();
+                        userName.set('name', req.params.openid);
+                        userName.set('cheaes', results[0]._serverData.cheaes);
+                        userName.set('List',req.params.name);
+                        userName.save().then(function (UserList) {
+                            // 成功保存之后，执行其他逻辑.
+                            res.json({title:"ok"})
+                        },  function (err) {
+                            if (err.code === 101) {
+                                // 该错误的信息为：{ code: 101, message: 'Class or object doesn\'t exists.' }，说明 Todo 数据表还未创建，所以返回空的 Todo 列表。
+                                // 具体的错误代码详见：https://leancloud.cn/docs/error_code.html
+                                res.json({
+                                    title: 'Login 列表',
+                                    dataforlean: ['错误']
+                                });
+                            } else {
+                                next(err);
+                            }
+                        }).catch(next);
+                    }
+                };
+
+            }else{
+                var userName = new UserName();
+                userName.set('name', req.params.openid);
+                userName.set('cheaes', results[0]._serverData.cheaes);
+                userName.set('List',req.params.name);
+                userName.save().then(function (UserList) {
+                    // 成功保存之后，执行其他逻辑.
+                    res.json({title:"ok"})
+                },  function (err) {
+                    if (err.code === 101) {
+                        // 该错误的信息为：{ code: 101, message: 'Class or object doesn\'t exists.' }，说明 Todo 数据表还未创建，所以返回空的 Todo 列表。
+                        // 具体的错误代码详见：https://leancloud.cn/docs/error_code.html
+                        res.json({
+                            title: 'Login 列表',
+                            dataforlean: ['错误']
+                        });
+                    } else {
+                        next(err);
+                    }
+                }).catch(next);
+            }
+            
+        }
+        
+        
+    }, function (err) {
+        if (err.code === 101) {
+            // 该错误的信息为：{ code: 101, message: 'Class or object doesn\'t exists.' }，说明 Todo 数据表还未创建，所以返回空的 Todo 列表。
+            // 具体的错误代码详见：https://leancloud.cn/docs/error_code.html
+            res.json({
+                title: 'Login 列表',
+                dataforlean: ['错误']
+            });
+        } else {
+            next(err);
+        }
+    }).catch(next);
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*操作账单*/
 //查询
-app.get('/getopenid', function (req, res, next) {
+app.get('/getopenid/:ListName', function (req, res, next) {
+    var UserList = AV.Object.extend(req.params.ListName);
     var query = new AV.Query(UserList);
     query.descending('createdAt');
     query.find().then(function (results) {
@@ -56,12 +259,12 @@ app.get('/getopenid', function (req, res, next) {
     }).catch(next);
 });
 //增加
-app.get('/postcontent/:inputValue/:index/:inputValuebeizhu/:array', function (req, res, next) {
+app.get('/postcontent/:inputValue/:index/:inputValuebeizhu/:array/:ListName', function (req, res, next) {
+    var UserList = AV.Object.extend(req.params.ListName);
     console.log(req.params.inputValue,req.params.index,req.params.inputValuebeizhu,req.params.array,);
     var userList = new UserList();
     userList.set('name', req.params.array);
     userList.set('beizhu', req.params.inputValuebeizhu);
-    // 只要添加这一行代码，服务端就会自动添加这个字段
     userList.set('value',req.params.inputValue);
     userList.set('nameID',req.params.index);
     if(req.params.array=="收入"){
@@ -86,9 +289,10 @@ app.get('/postcontent/:inputValue/:index/:inputValuebeizhu/:array', function (re
     }).catch(next);
 });
 //删除
-app.get('/detelecontent/:ID', function (req, res, next) {
+app.get('/detelecontent/:ID/:ListName', function (req, res, next) {
+    var UserList = AV.Object.extend(req.params.ListName);
         console.log(req.params.ID)
-    var userList = AV.Object.createWithoutData('UserList',req.params.ID);
+    var userList = AV.Object.createWithoutData(req.params.ListName,req.params.ID);
     userList.destroy().then(function (success) {
         res.json({title:"ok"})
         // 删除成功
@@ -106,13 +310,15 @@ app.get('/detelecontent/:ID', function (req, res, next) {
     }).catch(next);
 });
 //更新
-app.get('/putcontent/:ID/:inputValue/:index/:inputValuebeizhu/:array', function (req, res, next) {
+app.get('/putcontent/:ID/:inputValue/:index/:inputValuebeizhu/:array/:ListName', function (req, res, next) {
+
+    var UserList = AV.Object.extend(req.params.ListName);
     console.log(req.params.inputValue,
         req.params.index,
         req.params.inputValuebeizhu,
         req.params.array,
         req.params.ID);
-var userListTow = AV.Object.createWithoutData('UserList', req.params.ID);
+var userListTow = AV.Object.createWithoutData(req.params.ListName, req.params.ID);
 // 修改属性
     userListTow.set('name', req.params.array);
     userListTow.set('beizhu', req.params.inputValuebeizhu);
@@ -127,6 +333,30 @@ var userListTow = AV.Object.createWithoutData('UserList', req.params.ID);
 // 保存到云端
     userListTow.save();
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //跨域请求数据头
 const setCorsSupport = (req, res, next) => {
