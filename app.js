@@ -153,7 +153,7 @@ app.get('/getList/:openid', function (req, res, next) {
 })
 //创建账单
 app.get('/newList/:openid/:name', function (req, res, next) {
-    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
+    // res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
     var newList = "M" + Math.random().toString(36).substr(2);
 
     var UserName = AV.Object.extend('UserName');
@@ -200,7 +200,7 @@ var TodoFolder = AV.Object.extend(newList);
 
 //绑定账单;
 app.get('/bindList/:openid/:name', function (req, res, next) {
-    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
+    // res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
 
 // console.log(req.params.openid,req.params.name)
 var UserName = AV.Object.extend('UserName');
@@ -299,7 +299,7 @@ var UserName = AV.Object.extend('UserName');
 /*操作账单*/
 //查询
 app.get('/getopenid/:ListName',function (req, res, next) {
-    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
+    // res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
 
     var UserList = AV.Object.extend(req.params.ListName);
     var query = new AV.Query(UserList);
@@ -325,7 +325,7 @@ app.get('/getopenid/:ListName',function (req, res, next) {
 });
 //增加
 app.get('/postcontent/:inputValue/:index/:inputValuebeizhu/:array/:ListName', function (req, res, next) {
-    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
+    // res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
 
     var UserList = AV.Object.extend(req.params.ListName);
     // console.log(req.params.inputValue,req.params.index,req.params.inputValuebeizhu,req.params.array,);
@@ -357,7 +357,7 @@ app.get('/postcontent/:inputValue/:index/:inputValuebeizhu/:array/:ListName', fu
 });
 //删除
 app.get('/detelecontent/:ID/:ListName', function (req, res, next) {
-    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
+    // res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
 
     var UserList = AV.Object.extend(req.params.ListName);
         // console.log(req.params.ID)
@@ -380,7 +380,7 @@ app.get('/detelecontent/:ID/:ListName', function (req, res, next) {
 });
 //更新
 app.get('/putcontent/:ID/:inputValue/:index/:inputValuebeizhu/:array/:ListName', function (req, res, next) {
-    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
+    // res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
 
     var UserList = AV.Object.extend(req.params.ListName);
     // console.log(req.params.inputValue,
