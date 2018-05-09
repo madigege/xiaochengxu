@@ -424,6 +424,7 @@ const setCorsSupport = (req, res, next) => {
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
         res.header('Access-Control-Allow-Credentials', true);
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS, DELETE');
+        res.writeHead(200, {‘Content-Type’: ‘text/plain;charset=utf-8’});
     }
     next();
 };
