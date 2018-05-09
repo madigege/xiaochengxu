@@ -37,10 +37,11 @@ app.get('/getListbeforopenid/:code', function (req, res, next) {
     // res.header("Access-Control-Allow-Origin", '*');
     var code = req.params.code;
     console.log("code:",code);
+    // https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code='+ code +'&grant_type=authorization_code
         var getTokenUrl = "https://api.weixin.qq.com/sns/jscode2session?" +
             "appid=" + appid +
             "&secret=" + secret +
-            "&code=" + code +
+            "&js_code=" + code +
             "&grant_type=authorization_code";
             console.log(getTokenUrl)
     request.get({url:getTokenUrl},
