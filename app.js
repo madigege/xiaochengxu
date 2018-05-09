@@ -29,7 +29,7 @@ app.use(AV.Cloud.HttpsRedirect());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
+// var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 
 
@@ -152,7 +152,7 @@ app.get('/getList/:openid', function (req, res, next) {
         }).catch(next);
 })
 //创建账单
-app.get('/newList/:openid/:name', urlencodedParser, function (req, res, next) {
+app.get('/newList/:openid/:name', function (req, res, next) {
     res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
     var newList = "M" + Math.random().toString(36).substr(2);
 
@@ -199,7 +199,7 @@ var TodoFolder = AV.Object.extend(newList);
 })
 
 //绑定账单;
-app.get('/bindList/:openid/:name',urlencodedParser, function (req, res, next) {
+app.get('/bindList/:openid/:name', function (req, res, next) {
     res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
 
 // console.log(req.params.openid,req.params.name)
@@ -298,7 +298,7 @@ var UserName = AV.Object.extend('UserName');
 
 /*操作账单*/
 //查询
-app.get('/getopenid/:ListName', urlencodedParser,function (req, res, next) {
+app.get('/getopenid/:ListName',function (req, res, next) {
     res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
 
     var UserList = AV.Object.extend(req.params.ListName);
@@ -356,7 +356,7 @@ app.get('/postcontent/:inputValue/:index/:inputValuebeizhu/:array/:ListName', fu
     }).catch(next);
 });
 //删除
-app.get('/detelecontent/:ID/:ListName',urlencodedParser, function (req, res, next) {
+app.get('/detelecontent/:ID/:ListName', function (req, res, next) {
     res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
 
     var UserList = AV.Object.extend(req.params.ListName);
@@ -379,7 +379,7 @@ app.get('/detelecontent/:ID/:ListName',urlencodedParser, function (req, res, nex
     }).catch(next);
 });
 //更新
-app.get('/putcontent/:ID/:inputValue/:index/:inputValuebeizhu/:array/:ListName',urlencodedParser, function (req, res, next) {
+app.get('/putcontent/:ID/:inputValue/:index/:inputValuebeizhu/:array/:ListName', function (req, res, next) {
     res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
 
     var UserList = AV.Object.extend(req.params.ListName);
