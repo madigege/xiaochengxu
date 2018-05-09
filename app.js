@@ -29,14 +29,18 @@ app.use(AV.Cloud.HttpsRedirect());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
+
+
 
 app.get('/getListbeforopenid/:code', function (req, res, next) {
-    console.log(req.params.code)
+    // console.log(req.params.code)
     var appid = 'wx48099c832c538324'; //填写微信小程序appid  
     var secret = 'ebcc7241f2a37247dd9f279edbbdca27'; //填写微信小程序secret  
     // res.header("Access-Control-Allow-Origin", '*');
     var code = req.params.code;
-    console.log("code:",code);
+    // console.log("code:",code);
     // https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code='+ code +'&grant_type=authorization_code
         var getTokenUrl = "https://api.weixin.qq.com/sns/jscode2session?" +
             "appid=" + appid +
@@ -48,7 +52,7 @@ app.get('/getListbeforopenid/:code', function (req, res, next) {
         function(error, response, body){
             if(response.statusCode == 200){
                 // 第三步：拉取用户信息(需scope为 snsapi_userinfo)
-                console.log(JSON.parse(body));
+                // console.log(JSON.parse(body));
 
 
                 var data = JSON.parse(body);
@@ -82,7 +86,7 @@ app.get('/getListbeforopenid/:code', function (req, res, next) {
 
 
             }else{
-                console.log(response.statusCode);
+                // console.log(response.statusCode);
             }
         }
     );
@@ -148,8 +152,8 @@ app.get('/getList/:openid', function (req, res, next) {
         }).catch(next);
 })
 //创建账单
-app.get('/newList/:openid/:name', function (req, res, next) {
-
+app.get('/newList/:openid/:name', urlencodedParser, function (req, res, next) {
+    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
     var newList = "M" + Math.random().toString(36).substr(2);
 
     var UserName = AV.Object.extend('UserName');
@@ -187,7 +191,7 @@ var TodoFolder = AV.Object.extend(newList);
 // 生成一张表
     todoFolder.save().then(function (todo) {
     //返回id 
-    console.log('objectId is ' + todo.id);
+    // console.log('objectId is ' + todo.id);
     }, function (error) {
     //返回错误  
     console.error(error);
@@ -195,9 +199,10 @@ var TodoFolder = AV.Object.extend(newList);
 })
 
 //绑定账单;
-app.get('/bindList/:openid/:name', function (req, res, next) {
+app.get('/bindList/:openid/:name',urlencodedParser, function (req, res, next) {
+    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
 
-console.log(req.params.openid,req.params.name)
+// console.log(req.params.openid,req.params.name)
 var UserName = AV.Object.extend('UserName');
     //查询表
     var query = new AV.Query('UserName');
@@ -208,7 +213,7 @@ var UserName = AV.Object.extend('UserName');
                 title: '无法添加',
             });
         }else{
-            console.log(results.length)
+            // console.log(results.length)
             //增加
             if(results.length>1){
                 for (var i = 0; i < results.length; i++) {
@@ -293,7 +298,9 @@ var UserName = AV.Object.extend('UserName');
 
 /*操作账单*/
 //查询
-app.get('/getopenid/:ListName', function (req, res, next) {
+app.get('/getopenid/:ListName', urlencodedParser,function (req, res, next) {
+    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
+
     var UserList = AV.Object.extend(req.params.ListName);
     var query = new AV.Query(UserList);
     query.descending('createdAt');
@@ -318,8 +325,10 @@ app.get('/getopenid/:ListName', function (req, res, next) {
 });
 //增加
 app.get('/postcontent/:inputValue/:index/:inputValuebeizhu/:array/:ListName', function (req, res, next) {
+    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
+
     var UserList = AV.Object.extend(req.params.ListName);
-    console.log(req.params.inputValue,req.params.index,req.params.inputValuebeizhu,req.params.array,);
+    // console.log(req.params.inputValue,req.params.index,req.params.inputValuebeizhu,req.params.array,);
     var userList = new UserList();
     userList.set('name', req.params.array);
     userList.set('beizhu', req.params.inputValuebeizhu);
@@ -347,9 +356,11 @@ app.get('/postcontent/:inputValue/:index/:inputValuebeizhu/:array/:ListName', fu
     }).catch(next);
 });
 //删除
-app.get('/detelecontent/:ID/:ListName', function (req, res, next) {
+app.get('/detelecontent/:ID/:ListName',urlencodedParser, function (req, res, next) {
+    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
+
     var UserList = AV.Object.extend(req.params.ListName);
-        console.log(req.params.ID)
+        // console.log(req.params.ID)
     var userList = AV.Object.createWithoutData(req.params.ListName,req.params.ID);
     userList.destroy().then(function (success) {
         res.json({title:"ok"})
@@ -368,14 +379,15 @@ app.get('/detelecontent/:ID/:ListName', function (req, res, next) {
     }).catch(next);
 });
 //更新
-app.get('/putcontent/:ID/:inputValue/:index/:inputValuebeizhu/:array/:ListName', function (req, res, next) {
+app.get('/putcontent/:ID/:inputValue/:index/:inputValuebeizhu/:array/:ListName',urlencodedParser, function (req, res, next) {
+    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});
 
     var UserList = AV.Object.extend(req.params.ListName);
-    console.log(req.params.inputValue,
-        req.params.index,
-        req.params.inputValuebeizhu,
-        req.params.array,
-        req.params.ID);
+    // console.log(req.params.inputValue,
+    //     req.params.index,
+    //     req.params.inputValuebeizhu,
+    //     req.params.array,
+    //     req.params.ID);
 var userListTow = AV.Object.createWithoutData(req.params.ListName, req.params.ID);
 // 修改属性
     userListTow.set('name', req.params.array);
@@ -424,7 +436,6 @@ const setCorsSupport = (req, res, next) => {
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
         res.header('Access-Control-Allow-Credentials', true);
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS, DELETE');
-        res.writeHead(200, {‘Content-Type’: ‘text/plain;charset=utf-8’});
     }
     next();
 };
