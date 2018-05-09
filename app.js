@@ -52,10 +52,11 @@ app.get('/getListbeforopenid/:code', function (req, res, next) {
 
 
                 var data = JSON.parse(body);
-                // var access_token = data.access_token;
-                // var openid = data.openid;
-                 res.json({openid:data})
-                // res.json({openid:openid})
+                var access_token = data.access_token;
+                var openid = data.openid;
+                res.json({openid:openid})
+
+                //获取用户信息
                 // request.get({url:'https://api.weixin.qq.com/sns/userinfo?access_token='+access_token+'&openid='+openid+'&lang=zh_CN'},
                 //     function(error, response, body){
                 //         if(response.statusCode == 200){
@@ -77,6 +78,9 @@ app.get('/getListbeforopenid/:code', function (req, res, next) {
                 //         }
                 //     }
                 // );
+
+
+
             }else{
                 console.log(response.statusCode);
             }
