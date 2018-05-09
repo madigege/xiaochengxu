@@ -1,6 +1,6 @@
 'use strict';
 //上下留白中间代码是自己写的!
-
+var request = require('request');
 var express = require('express');
 var timeout = require('connect-timeout');
 var path = require('path');
@@ -30,7 +30,60 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
+app.get('/getListbeforopenid/:code', function (req, res, next) {
+    console.log(req.params.code)
+    var appid = 'wx48099c832c538324'; //填写微信小程序appid  
+    var secret = 'ebcc7241f2a37247dd9f279edbbdca27'; //填写微信小程序secret  
+    // res.header("Access-Control-Allow-Origin", '*');
+    var code = req.params.code;
+    console.log("code:",code);
+        var getTokenUrl = "https://api.weixin.qq.com/sns/jscode2session?" +
+            "appid=" + appid +
+            "&secret=" + secret +
+            "&code=" + code +
+            "&grant_type=authorization_code";
+            console.log(getTokenUrl)
+    request.get({url:getTokenUrl},
+        function(error, response, body){
+            if(response.statusCode == 200){
+                // 第三步：拉取用户信息(需scope为 snsapi_userinfo)
+                console.log(JSON.parse(body));
 
+
+                var data = JSON.parse(body);
+                // var access_token = data.access_token;
+                // var openid = data.openid;
+                 res.json({openid:data})
+                // res.json({openid:openid})
+                // request.get({url:'https://api.weixin.qq.com/sns/userinfo?access_token='+access_token+'&openid='+openid+'&lang=zh_CN'},
+                //     function(error, response, body){
+                //         if(response.statusCode == 200){
+                            
+                //             // 第四步：根据获取的用户信息进行对应操作
+                //             var userinfo = JSON.parse(body);
+                //             //console.log(JSON.parse(body));
+                //             console.log('获取微信信息成功！');
+                            
+                //             // 小测试，实际应用中，可以由此创建一个帐户
+                //             res.send("\
+                //                 <h1>"+userinfo.nickname+" 的个人信息</h1>\
+                //                 <p><img src='"+userinfo.headimgurl+"' /></p>\
+                //                 <p>"+userinfo.city+"，"+userinfo.province+"，"+userinfo.country+"</p>\
+                //             ");
+                            
+                //         }else{
+                //             console.log(response.statusCode);
+                //         }
+                //     }
+                // );
+            }else{
+                console.log(response.statusCode);
+            }
+        }
+    );
+
+    
+})
 
 
 
