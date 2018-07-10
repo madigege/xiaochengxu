@@ -37,7 +37,7 @@ lean up
 
 
 ##dva跨域配合node.js和leancloud
-**dva项目不需要打包,直接在dva项目中打包,放入public/out文件夹中,不需要执行antd+react下面的步骤**
+**dva项目不需要打包,直接在dva项目中打包,放入public/out文件夹中,不需要下面的步骤**
 ````
 1.需要修改app.js内容
         //定义路由和跨域接口
