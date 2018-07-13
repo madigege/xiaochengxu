@@ -54,7 +54,8 @@ const routesArr = [
     'CarForm',
     'productagreement',
     'newOder',
-    'productInsurance'
+    'productInsurance',
+	'OwnIp'
 
 ];
 
