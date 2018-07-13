@@ -141,49 +141,7 @@ app.get('/angular', function (req, res) {
     res.render('angular', {currentTime: new Date()});
 });
 
-//weburl
-app.get('/webUrl', function(req,res, next){
-    res.header("Access-Control-Allow-Origin", '*');
-	//测试
-	var URLA = "http://61.149.254.38:10121";
 
-	//阿里云
-	var URLD = "http://120.79.74.61:80";
-
-	//可修改
-	var URLE = "http://192.168.0.109:8080";
-
-	var ip = {
-		exportData: URLA
-	};
-    res.json(ip)
-});
-//手机url
-app.get('/PhoneUrl', function(req,res, next){
-	
-	res.header("Access-Control-Allow-Origin", '*');
-	//测试
-	var URLA = "http://61.149.254.38:10121";
-	//阿里云
-	var URLD = "http://120.79.74.61:80";
-	//可修改
-	var URLE = "http://192.168.0.109:8080";
-
-	//爱刷公众号
-	var wxAISHUA = "http://xiaochengxu.leanapp.cn/getCodeForOpenId/";
-	var encodeAISHUA = encodeURIComponent('http://xiaochengxu.leanapp.cn/getOpenid')
-	var urlAISHUA = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx19900063c5ea347b" +
-		"&redirect_uri=" + encodeAISHUA +
-		"&response_type=code&scope=snsapi_base&state=STATE&connect_redirect=1#wechat_redirect";
-
-	//测试
-	var ip = {
-		exportData: URLA,
-		wxOPENID: wxAISHUA,
-		wxREQUEST: urlAISHUA
-	};
-		res.json(ip)
-});
 // 设置默认超时时间
 app.use(timeout('15s'));
 app.use(bodyParser.json());
